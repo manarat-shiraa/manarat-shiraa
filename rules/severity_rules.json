@@ -1,0 +1,56 @@
+{
+  "_comment": "قواعد الخطورة والفرز. المسؤول: براء. base_severity من: low, medium, high, critical. likely_false_positive = القاعدة نفسها غالباً إزعاج. max_severity = سقف الخطورة. title_ar = اسم عربي يظهر للمحلل.",
+  "rules": {
+    "Email With Macro Attachment Delivered": {"base_severity": "medium", "category": "وصول أولي", "title_ar": "وصول بريد بمرفق فيه ماكرو", "mitre": ["T1566.001"]},
+    "PowerShell Spawned From Office": {"base_severity": "high", "category": "تنفيذ", "title_ar": "برنامج أوفيس شغّل PowerShell", "mitre": ["T1204.002", "T1059.001"]},
+    "Outbound Connection to Known Malicious IP": {"base_severity": "high", "category": "قيادة وتحكم", "title_ar": "اتصال بعنوان خبيث معروف", "mitre": ["T1071.001"]},
+    "Registry Run Key Added": {"base_severity": "medium", "category": "استمرارية", "title_ar": "إضافة برنامج للتشغيل التلقائي", "mitre": ["T1547.001"]},
+    "DNS Tunneling Detected": {"base_severity": "high", "category": "قيادة وتحكم", "title_ar": "نفق اتصال مخفي عبر DNS", "mitre": ["T1071.004"]},
+    "Multiple Failed Logins": {"base_severity": "medium", "category": "وصول لبيانات الدخول", "title_ar": "محاولات دخول فاشلة متكررة", "mitre": ["T1110"]},
+    "Successful Login After Failures": {"base_severity": "medium", "category": "وصول أولي", "title_ar": "دخول ناجح بعد محاولات فاشلة", "mitre": ["T1078"]},
+    "Sensitive File Accessed": {"base_severity": "medium", "category": "وصول لبيانات الدخول", "title_ar": "فتح ملف حساس", "mitre": ["T1552.001"]},
+    "LSASS Memory Access": {"base_severity": "high", "category": "وصول لبيانات الدخول", "title_ar": "قراءة ذاكرة LSASS (سرقة كلمات المرور)", "mitre": ["T1003.001"]},
+    "Remote Service Installed": {"base_severity": "high", "category": "تحرك جانبي", "title_ar": "تثبيت خدمة عن بُعد (PsExec)", "mitre": ["T1569.002", "T1021.002"]},
+    "LDAP Enumeration": {"base_severity": "medium", "category": "استكشاف", "title_ar": "استعلامات LDAP مكثفة على النطاق", "mitre": ["T1087.002"]},
+    "Large Database Query": {"base_severity": "medium", "category": "جمع بيانات", "title_ar": "استعلام ضخم على قاعدة البيانات", "mitre": ["T1005"]},
+    "Upload to Cloud Storage": {"base_severity": "high", "category": "تسريب بيانات", "title_ar": "رفع بيانات لتخزين سحابي خارجي", "mitre": ["T1567.002"]},
+    "Large Outbound Data Transfer": {"base_severity": "high", "category": "تسريب بيانات", "title_ar": "نقل بيانات كبير للخارج", "mitre": ["T1041"]},
+    "Port Scan Detected": {"base_severity": "low", "category": "استطلاع", "title_ar": "فحص منافذ", "mitre": ["T1595"], "max_severity": "medium"},
+    "Unsigned Executable Run": {"base_severity": "medium", "category": "تنفيذ", "title_ar": "تشغيل برنامج غير موقّع", "mitre": ["T1204.002"]},
+    "Scheduled Task Created": {"base_severity": "medium", "category": "استمرارية", "title_ar": "إنشاء مهمة مجدولة", "mitre": ["T1053.005"]},
+    "Security Event Log Cleared": {"base_severity": "high", "category": "تخفي", "title_ar": "مسح سجلات الأمان", "mitre": ["T1070.001"]},
+    "VPN Login From New Country": {"base_severity": "medium", "category": "وصول أولي", "title_ar": "دخول VPN من دولة جديدة", "mitre": ["T1133", "T1078"]},
+    "USB Device Inserted": {"base_severity": "low", "category": "وصول أولي", "title_ar": "توصيل ذاكرة USB", "mitre": ["T1091"]},
+    "Spam Email Blocked": {"base_severity": "low", "category": "وصول أولي", "title_ar": "حظر بريد مزعج", "mitre": ["T1566"], "likely_false_positive": true},
+    "Antivirus Update Failed": {"base_severity": "low", "category": "تشغيلي", "title_ar": "فشل تحديث مضاد الفيروسات", "mitre": [], "likely_false_positive": true},
+    "Device Offline": {"base_severity": "low", "category": "تشغيلي", "title_ar": "جهاز غير متصل", "mitre": [], "likely_false_positive": true}
+  },
+  "exceptions": {
+    "_comment": "قائمة الاستثناءات: نشاط يشبه الهجوم لكنه معروف ومصرّح. التنبيه ما ينحذف، ينعلّم كإنذار كاذب مع السبب. شروط المطابقة: match (حقل = واحدة من القيم)، raw_contains (نص داخل السجل)، max_event_count، hours_utc [من، إلى).",
+    "items": [
+      {"id": "EX-01", "rule_name": "Port Scan Detected", "match": {"src_ip": ["10.0.5.10"]}, "reason": "فحص دوري مصرّح من خادم Nessus الداخلي"},
+      {"id": "EX-02", "rule_name": "Multiple Failed Logins", "max_event_count": 4, "reason": "عدد المحاولات أقل من حد التخمين (5 محاولات)، غالباً نسيان كلمة مرور"},
+      {"id": "EX-03", "rule_name": "Unsigned Executable Run", "match": {"user": ["svc_maint"]}, "reason": "سكربت صيانة مجدول لفريق تقنية المعلومات"},
+      {"id": "EX-04", "rule_name": "Scheduled Task Created", "raw_contains": ["GoogleUpdate"], "reason": "مهمة تحديث Chrome التلقائية"},
+      {"id": "EX-05", "rule_name": "LSASS Memory Access", "raw_contains": ["CSFalconService.exe"], "reason": "فحص روتيني من برنامج الحماية CrowdStrike"},
+      {"id": "EX-06", "rule_name": "Security Event Log Cleared", "match": {"host": ["DEV-SRV-01"]}, "reason": "بيئة تجريبية للمطورين، ومسح السجلات فيها مسموح"},
+      {"id": "EX-07", "rule_name": "Large Database Query", "match": {"user": ["svc_powerbi"]}, "reason": "تحديث تقارير PowerBI المجدول"},
+      {"id": "EX-08", "rule_name": "Large Outbound Data Transfer", "match": {"user": ["svc_backup"]}, "hours_utc": [0, 3], "reason": "النسخ الاحتياطي اليومي في وقته المحدد"}
+    ]
+  },
+  "default": {"base_severity": "medium", "category": "غير مصنف", "mitre": []},
+  "escalation": {
+    "_comment": "رفع الأولوية حسب الظل الرقمي: (1) الجهاز أصل حرج = ترتفع درجة وأقلها high. (2) الجهاز على مسار هجوم وبعده عن الأصل الحرج أقل من أو يساوي near_hops = ترتفع درجة. (3) عنوان IP مشبوه = ترتفع درجة.",
+    "near_hops": 2,
+    "skip_likely_false_positive": true
+  },
+  "deduplication": {
+    "_comment": "نفس القاعدة على نفس الجهاز خلال window_minutes = تكرار، ينعرض مرة وحدة مع العدد",
+    "window_minutes": 10
+  },
+  "correlation": {
+    "_comment": "تنبيهات على أجهزة متصلة في الظل الرقمي وفرقها الزمني أقل من window_minutes تنجمع في حادثة وحدة. إذا الحادثة فيها min_alerts_for_critical تنبيهات أو أكثر وتتبع مسار هجوم معروف، كل تنبيهاتها تصير critical.",
+    "window_minutes": 45,
+    "min_alerts_for_critical": 3
+  }
+}

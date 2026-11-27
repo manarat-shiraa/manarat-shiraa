@@ -1,0 +1,302 @@
+{
+  "_comment": "شبكة وهمية لشركة صغيرة مبنية على Windows و Active Directory. criticality من 1 إلى 5، difficulty من 0 (سهل) إلى 1 (صعب). المسؤول: خالد + براء",
+  "assets": [
+    {
+      "id": "PC-SALES-07",
+      "label": "جهاز المبيعات 07",
+      "type": "workstation",
+      "zone": "LAN",
+      "criticality": 2,
+      "vulns": [
+        "CVE-2023-23397"
+      ]
+    },
+    {
+      "id": "PC-SALES-03",
+      "label": "جهاز المبيعات 03",
+      "type": "workstation",
+      "zone": "LAN",
+      "criticality": 2,
+      "vulns": []
+    },
+    {
+      "id": "PC-HR-02",
+      "label": "جهاز الموارد البشرية",
+      "type": "workstation",
+      "zone": "LAN",
+      "criticality": 2,
+      "vulns": []
+    },
+    {
+      "id": "PC-IT-ADMIN",
+      "label": "جهاز مدير تقنية المعلومات",
+      "type": "workstation",
+      "zone": "LAN",
+      "criticality": 4,
+      "vulns": []
+    },
+    {
+      "id": "PRINTER-01",
+      "label": "الطابعة",
+      "type": "iot",
+      "zone": "LAN",
+      "criticality": 1,
+      "vulns": [
+        "default-credentials"
+      ]
+    },
+    {
+      "id": "WEB-SRV",
+      "label": "خادم الموقع",
+      "type": "server",
+      "zone": "DMZ",
+      "criticality": 3,
+      "vulns": [
+        "CVE-2021-41773"
+      ]
+    },
+    {
+      "id": "VPN-GW",
+      "label": "بوابة VPN",
+      "type": "gateway",
+      "zone": "DMZ",
+      "criticality": 3,
+      "vulns": []
+    },
+    {
+      "id": "MAIL-SRV",
+      "label": "خادم البريد",
+      "type": "server",
+      "zone": "DMZ",
+      "criticality": 3,
+      "vulns": []
+    },
+    {
+      "id": "FILE-SRV",
+      "label": "خادم الملفات",
+      "type": "server",
+      "zone": "SERVERS",
+      "criticality": 3,
+      "vulns": []
+    },
+    {
+      "id": "APP-SRV",
+      "label": "خادم التطبيقات",
+      "type": "server",
+      "zone": "SERVERS",
+      "criticality": 4,
+      "vulns": []
+    },
+    {
+      "id": "BACKUP-SRV",
+      "label": "خادم النسخ الاحتياطي",
+      "type": "server",
+      "zone": "SERVERS",
+      "criticality": 4,
+      "vulns": []
+    },
+    {
+      "id": "DC-01",
+      "label": "وحدة التحكم بالنطاق",
+      "type": "domain_controller",
+      "zone": "SERVERS",
+      "criticality": 5,
+      "crown_jewel": true,
+      "vulns": []
+    },
+    {
+      "id": "DB-CUSTOMERS",
+      "label": "قاعدة بيانات العملاء",
+      "type": "database",
+      "zone": "SERVERS",
+      "criticality": 5,
+      "crown_jewel": true,
+      "vulns": []
+    },
+    {
+      "id": "NESSUS-SRV",
+      "label": "خادم فحص الثغرات (Nessus)",
+      "type": "scanner",
+      "zone": "SERVERS",
+      "criticality": 2,
+      "vulns": []
+    },
+    {
+      "id": "DEV-SRV-01",
+      "label": "خادم المطورين التجريبي",
+      "type": "server",
+      "zone": "DEV",
+      "criticality": 1,
+      "vulns": []
+    }
+  ],
+  "entry_points": [
+    {
+      "asset": "PC-SALES-07",
+      "vector": "إيميل تصيّد",
+      "mitre": "T1566"
+    },
+    {
+      "asset": "WEB-SRV",
+      "vector": "ثغرة في الموقع العام",
+      "mitre": "T1190"
+    },
+    {
+      "asset": "VPN-GW",
+      "vector": "تسجيل دخول VPN بكلمة مرور مسروقة",
+      "mitre": "T1133"
+    }
+  ],
+  "edges": [
+    {
+      "id": "E01",
+      "from": "PC-SALES-07",
+      "to": "FILE-SRV",
+      "type": "shared_credential",
+      "label": "كلمة مرور مشتركة مع خادم الملفات",
+      "difficulty": 0.3,
+      "mitre": "T1078",
+      "fix": "إلغاء كلمة المرور المشتركة وتفعيل التحقق الثنائي"
+    },
+    {
+      "id": "E02",
+      "from": "PC-SALES-07",
+      "to": "PC-SALES-03",
+      "type": "smb_lateral",
+      "label": "مشاركة ملفات SMB مفتوحة بين الأجهزة",
+      "difficulty": 0.6,
+      "mitre": "T1021.002",
+      "fix": "إغلاق SMB بين أجهزة الموظفين"
+    },
+    {
+      "id": "E03",
+      "from": "PC-SALES-03",
+      "to": "FILE-SRV",
+      "type": "session",
+      "label": "جلسة مفتوحة على خادم الملفات",
+      "difficulty": 0.5,
+      "mitre": "T1078",
+      "fix": "تقييد صلاحيات الوصول لخادم الملفات"
+    },
+    {
+      "id": "E04",
+      "from": "FILE-SRV",
+      "to": "APP-SRV",
+      "type": "stored_credential",
+      "label": "بيانات دخول خادم التطبيقات محفوظة في ملف نصي",
+      "difficulty": 0.25,
+      "mitre": "T1552.001",
+      "fix": "حذف ملف كلمات المرور ونقلها لخزنة أسرار"
+    },
+    {
+      "id": "E05",
+      "from": "APP-SRV",
+      "to": "DB-CUSTOMERS",
+      "type": "db_connection",
+      "label": "اتصال مباشر بقاعدة البيانات بحساب صلاحياته كاملة",
+      "difficulty": 0.2,
+      "mitre": "T1078.003",
+      "fix": "تقليل صلاحيات حساب التطبيق على قاعدة البيانات"
+    },
+    {
+      "id": "E06",
+      "from": "FILE-SRV",
+      "to": "PC-IT-ADMIN",
+      "type": "cached_admin_creds",
+      "label": "بيانات دخول المدير مخزنة مؤقتاً",
+      "difficulty": 0.45,
+      "mitre": "T1003",
+      "fix": "تفعيل حماية بيانات الدخول (Credential Guard)"
+    },
+    {
+      "id": "E07",
+      "from": "PC-IT-ADMIN",
+      "to": "DC-01",
+      "type": "admin_session",
+      "label": "جلسة مدير نطاق مفتوحة",
+      "difficulty": 0.2,
+      "mitre": "T1078.002",
+      "fix": "فصل حساب الإدارة عن حساب الاستخدام اليومي"
+    },
+    {
+      "id": "E08",
+      "from": "DC-01",
+      "to": "DB-CUSTOMERS",
+      "type": "domain_admin",
+      "label": "صلاحيات مدير النطاق على كل الخوادم",
+      "difficulty": 0.1,
+      "mitre": "T1078.002",
+      "fix": "تقسيم صلاحيات الإدارة حسب الخادم"
+    },
+    {
+      "id": "E09",
+      "from": "DC-01",
+      "to": "BACKUP-SRV",
+      "type": "domain_admin",
+      "label": "صلاحيات مدير النطاق على خادم النسخ",
+      "difficulty": 0.1,
+      "mitre": "T1078.002",
+      "fix": "عزل خادم النسخ الاحتياطي عن النطاق"
+    },
+    {
+      "id": "E10",
+      "from": "BACKUP-SRV",
+      "to": "DB-CUSTOMERS",
+      "type": "backup_access",
+      "label": "نسخ احتياطية غير مشفرة لقاعدة البيانات",
+      "difficulty": 0.3,
+      "mitre": "T1005",
+      "fix": "تشفير النسخ الاحتياطية"
+    },
+    {
+      "id": "E11",
+      "from": "WEB-SRV",
+      "to": "APP-SRV",
+      "type": "exploit",
+      "label": "ثغرة Apache تسمح بالوصول لخادم التطبيقات",
+      "difficulty": 0.4,
+      "mitre": "T1210",
+      "fix": "تحديث Apache وعزل خادم الموقع"
+    },
+    {
+      "id": "E12",
+      "from": "VPN-GW",
+      "to": "PC-HR-02",
+      "type": "remote_access",
+      "label": "وصول VPN لكل الشبكة الداخلية",
+      "difficulty": 0.5,
+      "mitre": "T1133",
+      "fix": "تقسيم الشبكة وتقييد وصول VPN"
+    },
+    {
+      "id": "E13",
+      "from": "PC-HR-02",
+      "to": "FILE-SRV",
+      "type": "session",
+      "label": "جلسة مفتوحة على خادم الملفات",
+      "difficulty": 0.5,
+      "mitre": "T1078",
+      "fix": "تقييد صلاحيات الوصول لخادم الملفات"
+    },
+    {
+      "id": "E14",
+      "from": "PRINTER-01",
+      "to": "PC-HR-02",
+      "type": "default_credentials",
+      "label": "كلمة مرور افتراضية للطابعة",
+      "difficulty": 0.8,
+      "mitre": "T1078.001",
+      "fix": "تغيير كلمة مرور الطابعة الافتراضية"
+    },
+    {
+      "id": "E15",
+      "from": "MAIL-SRV",
+      "to": "PC-SALES-07",
+      "type": "mail_delivery",
+      "label": "مرفقات خطيرة تصل للموظفين بدون فحص",
+      "difficulty": 0.3,
+      "mitre": "T1566.001",
+      "fix": "تفعيل فحص المرفقات في خادم البريد"
+    }
+  ]
+}

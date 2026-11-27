@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="560" viewBox="380 270 440 560" role="img" aria-label="شعار منارة شراع">
+<defs>
+<linearGradient id="bR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E9B949" stop-opacity="0.85"/><stop offset="1" stop-color="#E9B949" stop-opacity="0"/></linearGradient>
+<linearGradient id="bL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#E9B949" stop-opacity="0.85"/><stop offset="1" stop-color="#E9B949" stop-opacity="0"/></linearGradient>
+<clipPath id="tw"><path d="M490 760 L710 760 L668 430 L532 430 Z"/></clipPath>
+</defs>
+
+<g fill="none" stroke="#2B3D5C" stroke-width="5" stroke-dasharray="14 16"><circle cx="600" cy="400" r="170"/><circle cx="600" cy="400" r="300"/></g>
+<path d="M600 400 L1120 290 L1120 510 Z" fill="url(#bR)"/>
+<path d="M600 400 L80 290 L80 510 Z" fill="url(#bL)"/>
+<path d="M490 760 L710 760 L668 430 L532 430 Z" fill="#F3F1EC"/>
+<g clip-path="url(#tw)" fill="#E5574B"><rect x="440" y="540" width="320" height="70"/><rect x="440" y="670" width="320" height="70"/></g>
+<rect x="515" y="414" width="170" height="20" rx="6" fill="#B8C4D6"/>
+<rect x="552" y="340" width="96" height="76" rx="10" fill="#E9B949"/>
+<circle cx="600" cy="378" r="20" fill="#FBFAF7"/>
+<path d="M538 342 L662 342 L600 284 Z" fill="#E5574B"/>
+<rect x="420" y="760" width="360" height="46" rx="14" fill="#17243A" stroke="#2B3D5C" stroke-width="4"/>
+<rect x="578" y="690" width="44" height="70" rx="8" fill="#17243A"/>
+
+</svg>
